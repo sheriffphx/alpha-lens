@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-inter: var(--font-inter-face);
+  --font-jetbrains: var(--font-jetbrains-face);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

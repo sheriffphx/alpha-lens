@@ -1,0 +1,26 @@
+<svg viewBox="0 0 100 100" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Dashed Lens Ring -->
+  <circle cx="50" cy="50" r="45" stroke="url(#logo-gradient)" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.25" />
+
+  <!-- The 'A' Lens Shape -->
+  <path d="M50 20L25 75H35L50 42L65 75H75L50 20Z" fill="url(#logo-gradient)" style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.4));" />
+
+  <!-- The "AI Eye" / Inner Core -->
+  <circle cx="50" cy="52" r="8" fill="#030712" />
+  <circle cx="50" cy="52" r="4" fill="url(#logo-gradient)">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1" />
+  </circle>
+
+  <!-- Refraction Rays -->
+  <g stroke="url(#logo-gradient)" stroke-linecap="round" opacity="0.7">
+    <path d="M72 28L82 18" stroke-width="2" />
+    <path d="M78 38L88 34" stroke-width="1" opacity="0.5" />
+  </g>
+</svg>
