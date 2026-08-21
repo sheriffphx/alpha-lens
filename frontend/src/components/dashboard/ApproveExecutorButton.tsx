@@ -8,7 +8,6 @@ import {
 
 import { parseUnits } from "viem";
 
-import { alphaLensExecutor } from "@/lib/alphaLensExecutor";
 import { erc20Abi } from "@/lib/erc20Abi";
 import { useChainId } from "wagmi";
 import { getAlphaLensExecutor } from "@/lib/alphaLensExecutor";

@@ -42,18 +42,14 @@ const botMainnet = defineChain({
 const deployments = {
   968: {
     chain: botTestnet,
-    executor:
-      "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as `0x${string}`,
-    router:
-      "0xD6425a02f0845B8D99e349C34D2E7A576E177345" as `0x${string}`,
+    executor: "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as `0x${string}`,
+    router: "0xD6425a02f0845B8D99e349C34D2E7A576E177345" as `0x${string}`,
   },
 
   677: {
     chain: botMainnet,
-    executor:
-      "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as `0x${string}`,
-    router:
-      "0x1414eD29FdFD322c3c0a830330ed982E2D629e76" as `0x${string}`,
+    executor: "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as `0x${string}`,
+    router: "0x1414eD29FdFD322c3c0a830330ed982E2D629e76" as `0x${string}`,
   },
 } as const;
 
@@ -81,7 +77,9 @@ export async function POST(req: Request) {
     }
 
     if (chainId !== 968 && chainId !== 677) {
-      throw new Error("Unsupported chain. Expected BOT Chain Testnet or BOT Chain Mainnet.");
+      throw new Error(
+        "Unsupported chain. Expected BOT Chain Testnet or BOT Chain Mainnet.",
+      );
     }
 
     const deployment = deployments[chainId];
@@ -115,10 +113,7 @@ export async function POST(req: Request) {
       active,
     ] = policy;
 
-    if (
-      policyOwner ===
-      "0x0000000000000000000000000000000000000000"
-    ) {
+    if (policyOwner === "0x0000000000000000000000000000000000000000") {
       throw new Error(`Policy #${policyId} does not exist.`);
     }
 
@@ -141,9 +136,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const nowSeconds = BigInt(
-      Math.floor(Date.now() / 1000),
-    );
+    const nowSeconds = BigInt(Math.floor(Date.now() / 1000));
 
     if (expiry <= nowSeconds) {
       return NextResponse.json({
@@ -251,28 +244,16 @@ Rules:
 
     const parsed = JSON.parse(cleaned);
 
-    if (
-      parsed.action !== "swap" &&
-      parsed.action !== "hold"
-    ) {
+    if (parsed.action !== "swap" && parsed.action !== "hold") {
       throw new Error("Invalid AI action.");
     }
 
     const opportunityScore = Math.max(
       0,
-      Math.min(
-        100,
-        Number(parsed.opportunityScore ?? 0),
-      ),
+      Math.min(100, Number(parsed.opportunityScore ?? 0)),
     );
 
-    const confidence = Math.max(
-      0,
-      Math.min(
-        1,
-        Number(parsed.confidence ?? 0),
-      ),
-    );
+    const confidence = Math.max(0, Math.min(1, Number(parsed.confidence ?? 0)));
 
     const decisionId = keccak256(
       toBytes(
@@ -315,9 +296,7 @@ Rules:
           tokenOut,
           opportunityScore,
           confidence,
-          reason:
-            parsed.reason ??
-            "No reason supplied.",
+          reason: parsed.reason ?? "No reason supplied.",
           evidenceHash,
         },
         chainId,
@@ -330,29 +309,20 @@ Rules:
     let amountIn: bigint;
 
     try {
-      amountIn = BigInt(
-        parsed.amountIn ?? "0",
-      );
+      amountIn = BigInt(parsed.amountIn ?? "0");
     } catch {
-      throw new Error(
-        "AI returned an invalid amountIn.",
-      );
+      throw new Error("AI returned an invalid amountIn.");
     }
 
     if (amountIn <= 0n) {
-      throw new Error(
-        "Proposed amountIn must be greater than zero.",
-      );
+      throw new Error("Proposed amountIn must be greater than zero.");
     }
 
     if (amountIn > maxAmount) {
       amountIn = maxAmount;
     }
 
-    if (
-      opportunityScore <
-      Number(minOpportunityScore)
-    ) {
+    if (opportunityScore < Number(minOpportunityScore)) {
       return NextResponse.json({
         success: true,
         decision: {
@@ -376,24 +346,15 @@ Rules:
       address: ROUTER,
       abi: routerAbi,
       functionName: "getAmountsOut",
-      args: [
-        amountIn,
-        [tokenIn, tokenOut],
-      ],
+      args: [amountIn, [tokenIn, tokenOut]],
     });
 
-    const quotedOutput =
-      quote[quote.length - 1];
+    const quotedOutput = quote[quote.length - 1];
 
     const amountOutMin =
-      (quotedOutput *
-        (10_000n - BigInt(maxSlippageBps))) /
-      10_000n;
+      (quotedOutput * (10_000n - BigInt(maxSlippageBps))) / 10_000n;
 
-    const deadline =
-      nowSeconds + 600n > expiry
-        ? expiry
-        : nowSeconds + 600n;
+    const deadline = nowSeconds + 600n > expiry ? expiry : nowSeconds + 600n;
 
     const evidenceHash = keccak256(
       toBytes(
@@ -404,8 +365,7 @@ Rules:
           reason: parsed.reason,
           opportunityScore,
           confidence,
-          quotedOutput:
-            quotedOutput.toString(),
+          quotedOutput: quotedOutput.toString(),
         }),
       ),
     );
@@ -422,17 +382,14 @@ Rules:
         tokenOut,
 
         amountIn: amountIn.toString(),
-        amountOutMin:
-          amountOutMin.toString(),
+        amountOutMin: amountOutMin.toString(),
 
         opportunityScore,
         confidence,
 
         deadline: deadline.toString(),
 
-        reason:
-          parsed.reason ??
-          "No reason supplied.",
+        reason: parsed.reason ?? "No reason supplied.",
 
         evidenceHash,
       },
@@ -443,18 +400,12 @@ Rules:
       router: ROUTER,
     });
   } catch (error) {
-    console.error(
-      "Agent decision failed:",
-      error,
-    );
+    console.error("Agent decision failed:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Agent decision failed",
+        error: error instanceof Error ? error.message : "Agent decision failed",
       },
       { status: 500 },
     );

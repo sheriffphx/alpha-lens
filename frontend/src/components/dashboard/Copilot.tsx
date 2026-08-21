@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FormEvent, KeyboardEvent, useState } from "react";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 
 type CopilotProps = {
   context: unknown;
@@ -66,7 +66,9 @@ export function Copilot({ context }: CopilotProps) {
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: data.answer ?? "I could not generate a response from the available data.",
+          content:
+            data.answer ??
+            "I could not generate a response from the available data.",
         },
       ]);
     } catch (requestError) {
@@ -100,7 +102,9 @@ export function Copilot({ context }: CopilotProps) {
           <Image src="/logo.svg" alt="" width={36} height={36} />
           <div>
             <h2 className="font-semibold">AlphaLens Copilot</h2>
-            <p className="mt-0.5 text-sm text-white/45">On-chain portfolio intelligence · BOT Chain</p>
+            <p className="mt-0.5 text-sm text-white/45">
+              On-chain portfolio intelligence · BOT Chain
+            </p>
           </div>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full border border-[#00D4FF]/25 bg-[#00D4FF]/5 px-3 py-1 font-mono text-xs text-[#00D4FF]">
@@ -109,14 +113,23 @@ export function Copilot({ context }: CopilotProps) {
         </span>
       </header>
 
-      <div className="max-h-[520px] min-h-[360px] space-y-5 overflow-y-auto px-5 py-6 sm:px-6" aria-live="polite">
+      <div
+        className="max-h-[520px] min-h-[360px] space-y-5 overflow-y-auto px-5 py-6 sm:px-6"
+        aria-live="polite"
+      >
         {messages.map((message) => (
           <div
             key={message.id}
             className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
           >
             {message.role === "assistant" && (
-              <Image className="mt-1 h-7 w-7 shrink-0" src="/logo.svg" alt="AlphaLens" width={28} height={28} />
+              <Image
+                className="mt-1 h-7 w-7 shrink-0"
+                src="/logo.svg"
+                alt="AlphaLens"
+                width={28}
+                height={28}
+              />
             )}
             <div
               className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-6 sm:max-w-[75%] ${
@@ -132,7 +145,13 @@ export function Copilot({ context }: CopilotProps) {
 
         {isLoading && (
           <div className="flex gap-3">
-            <Image className="mt-1 h-7 w-7 shrink-0" src="/logo.svg" alt="AlphaLens" width={28} height={28} />
+            <Image
+              className="mt-1 h-7 w-7 shrink-0"
+              src="/logo.svg"
+              alt="AlphaLens"
+              width={28}
+              height={28}
+            />
             <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/55">
               Analysing your dashboard data…
             </div>
@@ -171,16 +190,32 @@ export function Copilot({ context }: CopilotProps) {
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00D4FF] text-[#02060b] transition hover:bg-[#4de2ff] disabled:cursor-not-allowed disabled:opacity-35"
               aria-label="Send message"
             >
-              <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" aria-hidden="true">
-                <path d="M3 3L17 10L3 17L5.5 10L3 3Z" fill="currentColor" stroke="currentColor" strokeLinejoin="round" />
+              <svg
+                viewBox="0 0 20 20"
+                className="h-4 w-4"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 3L17 10L3 17L5.5 10L3 3Z"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
           </div>
-          <p className="mt-2 text-xs text-white/35">Press Ctrl/Cmd + Enter to send. AlphaLens provides analysis, not financial advice or transaction execution.</p>
+          <p className="mt-2 text-xs text-white/35">
+            Press Ctrl/Cmd + Enter to send. AlphaLens provides analysis, not
+            financial advice or transaction execution.
+          </p>
         </form>
 
         {error && (
-          <p role="alert" className="mt-3 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3 py-2 text-sm text-rose-300">
+          <p
+            role="alert"
+            className="mt-3 rounded-lg border border-rose-400/25 bg-rose-400/5 px-3 py-2 text-sm text-rose-300"
+          >
             {error}
           </p>
         )}

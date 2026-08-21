@@ -28,7 +28,9 @@ function StatCard({
       <p className="font-mono text-[11px] tracking-[0.12em] text-white/40">
         {label}
       </p>
-      <p className="mt-4 text-3xl font-bold tracking-tight text-white">{value}</p>
+      <p className="mt-4 text-3xl font-bold tracking-tight text-white">
+        {value}
+      </p>
       <p className={`mt-2 text-sm ${detailClassName}`}>{detail}</p>
     </article>
   );
@@ -78,8 +80,10 @@ export default function PortfolioPage() {
   );
 
   const totalValue = portfolio.totalValueUsd;
-  const stablecoinPercent = totalValue > 0 ? (composition.stablecoins / totalValue) * 100 : 0;
-  const nativePercent = totalValue > 0 ? (composition.native / totalValue) * 100 : 0;
+  const stablecoinPercent =
+    totalValue > 0 ? (composition.stablecoins / totalValue) * 100 : 0;
+  const nativePercent =
+    totalValue > 0 ? (composition.native / totalValue) * 100 : 0;
   const otherPercent = Math.max(0, 100 - stablecoinPercent - nativePercent);
   const nativeEnd = stablecoinPercent + nativePercent;
   const compositionGradient =
@@ -90,7 +94,9 @@ export default function PortfolioPage() {
   return (
     <main className="mx-auto min-h-screen max-w-7xl px-6 py-10">
       <header className="mb-8">
-        <p className="font-mono text-xs tracking-[0.18em] text-[#00D4FF]">PORTFOLIO</p>
+        <p className="font-mono text-xs tracking-[0.18em] text-[#00D4FF]">
+          PORTFOLIO
+        </p>
         <h1 className="mt-2 text-3xl font-semibold">Portfolio Value</h1>
         <p className="mt-2 text-sm text-white/50">{portfolio.wallet}</p>
       </header>
@@ -129,7 +135,9 @@ export default function PortfolioPage() {
         <article className="rounded-xl border border-white/10 bg-white/[0.025] p-6">
           <div>
             <h2 className="text-lg font-semibold">Portfolio Composition</h2>
-            <p className="mt-1 text-sm text-white/50">Allocation by asset category</p>
+            <p className="mt-1 text-sm text-white/50">
+              Allocation by asset category
+            </p>
           </div>
           <div className="mt-6 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
             <div
@@ -139,23 +147,49 @@ export default function PortfolioPage() {
             >
               <div className="absolute inset-6 flex flex-col items-center justify-center rounded-full bg-[#02060b]">
                 <span className="text-xs text-white/45">Total</span>
-                <span className="mt-1 text-sm font-semibold">{usd.format(totalValue)}</span>
+                <span className="mt-1 text-sm font-semibold">
+                  {usd.format(totalValue)}
+                </span>
               </div>
             </div>
             <div className="w-full space-y-4">
               {[
-                { label: "Stablecoins", value: composition.stablecoins, percent: stablecoinPercent, color: "bg-[#00D4FF]" },
-                { label: "Native", value: composition.native, percent: nativePercent, color: "bg-[#8B5CF6]" },
-                { label: "Other", value: composition.other, percent: otherPercent, color: "bg-[#F59E0B]" },
+                {
+                  label: "Stablecoins",
+                  value: composition.stablecoins,
+                  percent: stablecoinPercent,
+                  color: "bg-[#00D4FF]",
+                },
+                {
+                  label: "Native",
+                  value: composition.native,
+                  percent: nativePercent,
+                  color: "bg-[#8B5CF6]",
+                },
+                {
+                  label: "Other",
+                  value: composition.other,
+                  percent: otherPercent,
+                  color: "bg-[#F59E0B]",
+                },
               ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between gap-4 text-sm">
+                <div
+                  key={item.label}
+                  className="flex items-center justify-between gap-4 text-sm"
+                >
                   <div className="flex items-center gap-2 text-white/65">
-                    <span className={`h-2.5 w-2.5 rounded-full ${item.color}`} />
+                    <span
+                      className={`h-2.5 w-2.5 rounded-full ${item.color}`}
+                    />
                     {item.label}
                   </div>
                   <div className="text-right">
-                    <span className="font-medium text-white">{item.percent.toFixed(1)}%</span>
-                    <span className="ml-2 text-white/40">{usd.format(item.value)}</span>
+                    <span className="font-medium text-white">
+                      {item.percent.toFixed(1)}%
+                    </span>
+                    <span className="ml-2 text-white/40">
+                      {usd.format(item.value)}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -165,19 +199,27 @@ export default function PortfolioPage() {
 
         <article className="rounded-xl border border-white/10 bg-white/[0.025] p-6">
           <h2 className="text-lg font-semibold">Portfolio Analysis</h2>
-          <p className="mt-1 text-sm text-white/50">A quick read on capital allocation</p>
+          <p className="mt-1 text-sm text-white/50">
+            A quick read on capital allocation
+          </p>
           <dl className="mt-6 divide-y divide-white/10">
             <div className="flex items-center justify-between gap-4 py-4">
               <dt className="text-sm text-white/50">Stablecoin value</dt>
-              <dd className="font-mono text-sm font-medium">{usd.format(portfolioAnalysis.stablecoinValueUsd)}</dd>
+              <dd className="font-mono text-sm font-medium">
+                {usd.format(portfolioAnalysis.stablecoinValueUsd)}
+              </dd>
             </div>
             <div className="flex items-center justify-between gap-4 py-4">
               <dt className="text-sm text-white/50">Stablecoin allocation</dt>
-              <dd className="font-mono text-sm font-medium">{portfolioAnalysis.stablecoinAllocation.toFixed(2)}%</dd>
+              <dd className="font-mono text-sm font-medium">
+                {portfolioAnalysis.stablecoinAllocation.toFixed(2)}%
+              </dd>
             </div>
             <div className="flex items-center justify-between gap-4 py-4">
               <dt className="text-sm text-white/50">Idle capital</dt>
-              <dd className="font-mono text-sm font-medium text-rose-400">{usd.format(portfolioAnalysis.idleCapitalUsd)}</dd>
+              <dd className="font-mono text-sm font-medium text-rose-400">
+                {usd.format(portfolioAnalysis.idleCapitalUsd)}
+              </dd>
             </div>
             <div className="flex items-center justify-between gap-4 py-4">
               <dt className="text-sm text-white/50">Largest asset</dt>
@@ -194,7 +236,9 @@ export default function PortfolioPage() {
       <section className="mt-8">
         <div className="mb-4">
           <h2 className="text-xl font-semibold">Assets</h2>
-          <p className="mt-1 text-sm text-white/50">Assets currently held in your connected wallet.</p>
+          <p className="mt-1 text-sm text-white/50">
+            Assets currently held in your connected wallet.
+          </p>
         </div>
         <div className="overflow-x-auto rounded-xl border border-white/10 bg-white/[0.025]">
           <div className="min-w-[900px]">
@@ -221,16 +265,30 @@ export default function PortfolioPage() {
                     </span>
                     <div>
                       <p className="font-semibold">{asset.symbol}</p>
-                      <p className="mt-0.5 text-xs text-white/40">{asset.name}</p>
+                      <p className="mt-0.5 text-xs text-white/40">
+                        {asset.name}
+                      </p>
                     </div>
                   </div>
                   <div className="text-sm text-white/55">Wallet</div>
-                  <div className="font-mono text-sm">{asset.balance.toLocaleString("en-US", { maximumFractionDigits: 6 })}</div>
-                  <div className="font-mono text-sm text-white/55">{usd.format(asset.priceUsd)}</div>
-                  <div className="font-mono text-sm text-white/70">{asset.allocation.toFixed(2)}%</div>
-                  <div className="font-mono text-sm font-semibold">{usd.format(asset.valueUsd)}</div>
+                  <div className="font-mono text-sm">
+                    {asset.balance.toLocaleString("en-US", {
+                      maximumFractionDigits: 6,
+                    })}
+                  </div>
+                  <div className="font-mono text-sm text-white/55">
+                    {usd.format(asset.priceUsd)}
+                  </div>
+                  <div className="font-mono text-sm text-white/70">
+                    {asset.allocation.toFixed(2)}%
+                  </div>
+                  <div className="font-mono text-sm font-semibold">
+                    {usd.format(asset.valueUsd)}
+                  </div>
                   <div>
-                    <span className={`rounded border px-2 py-1 font-mono text-[10px] tracking-wide ${isIdle ? "border-rose-400/25 bg-rose-400/5 text-rose-400" : "border-[#00D4FF]/25 bg-[#00D4FF]/5 text-[#00D4FF]"}`}>
+                    <span
+                      className={`rounded border px-2 py-1 font-mono text-[10px] tracking-wide ${isIdle ? "border-rose-400/25 bg-rose-400/5 text-rose-400" : "border-[#00D4FF]/25 bg-[#00D4FF]/5 text-[#00D4FF]"}`}
+                    >
                       {isIdle ? "IDLE" : "HELD"}
                     </span>
                   </div>
@@ -243,9 +301,13 @@ export default function PortfolioPage() {
 
       <section className="mt-8 rounded-xl border border-white/10 bg-white/[0.025] p-6">
         <h2 className="text-lg font-semibold">Active Yield Positions</h2>
-        <p className="mt-1 text-sm text-white/50">Deposits and LP positions that are actively generating yield.</p>
+        <p className="mt-1 text-sm text-white/50">
+          Deposits and LP positions that are actively generating yield.
+        </p>
         <div className="mt-5 rounded-lg border border-dashed border-white/10 p-6 text-sm text-white/45">
-          No yield-bearing positions are indexed yet. Once lending deposits and LP-token balances are connected, their APY and earned yield will appear here.
+          No yield-bearing positions are indexed yet. Once lending deposits and
+          LP-token balances are connected, their APY and earned yield will
+          appear here.
         </div>
       </section>
     </main>

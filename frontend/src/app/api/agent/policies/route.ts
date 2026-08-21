@@ -1,10 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  createPublicClient,
-  defineChain,
-  http,
-  type Address,
-} from "viem";
+import { createPublicClient, defineChain, http, type Address } from "viem";
 
 const BOT_TESTNET = defineChain({
   id: 968,
@@ -39,14 +34,12 @@ const BOT_MAINNET = defineChain({
 const deployments = {
   968: {
     chain: BOT_TESTNET,
-    executor:
-      "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as Address,
+    executor: "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as Address,
   },
 
   677: {
     chain: BOT_MAINNET,
-    executor:
-      "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as Address,
+    executor: "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as Address,
   },
 } as const;
 
@@ -130,15 +123,11 @@ const agentExecutorAbi = [
 
 export async function GET(req: Request) {
   try {
-    const { searchParams } =
-      new URL(req.url);
+    const { searchParams } = new URL(req.url);
 
-    const account =
-      searchParams.get("account");
+    const account = searchParams.get("account");
 
-    const chainId = Number(
-      searchParams.get("chainId"),
-    );
+    const chainId = Number(searchParams.get("chainId"));
 
     if (!account) {
       return NextResponse.json(
@@ -150,10 +139,7 @@ export async function GET(req: Request) {
       );
     }
 
-    if (
-      chainId !== 968 &&
-      chainId !== 677
-    ) {
+    if (chainId !== 968 && chainId !== 677) {
       return NextResponse.json(
         {
           success: false,
@@ -163,95 +149,62 @@ export async function GET(req: Request) {
       );
     }
 
-    const deployment =
-      deployments[chainId];
+    const deployment = deployments[chainId];
 
-    const publicClient =
-      createPublicClient({
-        chain: deployment.chain,
-        transport: http(),
-      });
+    const publicClient = createPublicClient({
+      chain: deployment.chain,
+      transport: http(),
+    });
 
-    const policyIds =
-      await publicClient.readContract({
-        address:
-          deployment.executor,
-        abi: agentExecutorAbi,
-        functionName:
-          "getOwnerPolicyIds",
-        args: [
-          account as Address,
-        ],
-      });
+    const policyIds = await publicClient.readContract({
+      address: deployment.executor,
+      abi: agentExecutorAbi,
+      functionName: "getOwnerPolicyIds",
+      args: [account as Address],
+    });
 
-    const policies =
-      await Promise.all(
-        policyIds.map(
-          async (policyId) => {
-            const policy =
-              await publicClient.readContract(
-                {
-                  address:
-                    deployment.executor,
-                  abi:
-                    agentExecutorAbi,
-                  functionName:
-                    "policies",
-                  args: [policyId],
-                },
-              );
+    const policies = await Promise.all(
+      policyIds.map(async (policyId) => {
+        const policy = await publicClient.readContract({
+          address: deployment.executor,
+          abi: agentExecutorAbi,
+          functionName: "policies",
+          args: [policyId],
+        });
 
-            return {
-              policyId:
-                Number(policyId),
-              owner: policy[0],
-              agent: policy[1],
-              tokenIn: policy[2],
-              tokenOut: policy[3],
-              maxAmount:
-                policy[4].toString(),
-              maxSlippageBps:
-                policy[5].toString(),
-              minOpportunityScore:
-                policy[6].toString(),
-              cooldown:
-                policy[7].toString(),
-              lastExecution:
-                policy[8].toString(),
-              expiry:
-                policy[9].toString(),
-              active: policy[10],
-            };
-          },
-        ),
-      );
+        return {
+          policyId: Number(policyId),
+          owner: policy[0],
+          agent: policy[1],
+          tokenIn: policy[2],
+          tokenOut: policy[3],
+          maxAmount: policy[4].toString(),
+          maxSlippageBps: policy[5].toString(),
+          minOpportunityScore: policy[6].toString(),
+          cooldown: policy[7].toString(),
+          lastExecution: policy[8].toString(),
+          expiry: policy[9].toString(),
+          active: policy[10],
+        };
+      }),
+    );
 
     return NextResponse.json({
       success: true,
       chainId,
-      chainName:
-        deployment.chain.name,
-      executor:
-        deployment.executor,
-      policyIds:
-        policyIds.map((id) =>
-          id.toString(),
-        ),
+      chainName: deployment.chain.name,
+      executor: deployment.executor,
+      policyIds: policyIds.map((id) => id.toString()),
       policies,
     });
   } catch (error) {
-    console.error(
-      "Failed to load agent policies:",
-      error,
-    );
+    console.error("Failed to load agent policies:", error);
 
     return NextResponse.json(
       {
         success: false,
         error:
-          error instanceof Error
-            ? error.message
-            : "Failed to load policies",
+          error instanceof Error ? error.message : "Failed to load policies",
       },
       { status: 500 },
     );

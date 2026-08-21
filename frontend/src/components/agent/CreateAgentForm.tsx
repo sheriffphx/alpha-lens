@@ -48,12 +48,7 @@ export function CreateAgentForm() {
 
   const pendingApprovalAmount = useRef<bigint | null>(null);
 
-  const {
-    writeContract,
-    data: hash,
-    isPending,
-    error,
-  } = useWriteContract();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
 
   const {
     data: receipt,
@@ -70,30 +65,23 @@ export function CreateAgentForm() {
     error: approveError,
   } = useWriteContract();
 
-  const {
-    isLoading: approveConfirming,
-    isSuccess: approveSuccess,
-  } = useWaitForTransactionReceipt({
-    hash: approveHash,
-  });
+  const { isLoading: approveConfirming, isSuccess: approveSuccess } =
+    useWaitForTransactionReceipt({
+      hash: approveHash,
+    });
 
-  const supportedChain =
-    chainId === 968 || chainId === 677;
+  const supportedChain = chainId === 968 || chainId === 677;
 
   const tokenConfig = supportedChain
     ? TOKEN_CONFIG[chainId as 968 | 677]
     : null;
 
-  const executor = supportedChain
-    ? getAlphaLensExecutor(chainId)
-    : null;
+  const executor = supportedChain ? getAlphaLensExecutor(chainId) : null;
 
   useEffect(() => {
     if (!isSuccess || !receipt || !tokenConfig || !executor) return;
 
-    window.dispatchEvent(
-      new Event("alphalens-policy-created"),
-    );
+    window.dispatchEvent(new Event("alphalens-policy-created"));
 
     try {
       for (const log of receipt.logs) {
@@ -108,15 +96,9 @@ export function CreateAgentForm() {
           if (decoded.eventName === "PolicyCreated") {
             const policyId = decoded.args.policyId.toString();
 
-            localStorage.setItem(
-              "alphalens_policy_id",
-              policyId,
-            );
+            localStorage.setItem("alphalens_policy_id", policyId);
 
-            console.log(
-              "Created AlphaLens Policy:",
-              policyId,
-            );
+            console.log("Created AlphaLens Policy:", policyId);
 
             break;
           }
@@ -125,10 +107,7 @@ export function CreateAgentForm() {
         }
       }
     } catch (err) {
-      console.error(
-        "Failed to extract policy ID:",
-        err,
-      );
+      console.error("Failed to extract policy ID:", err);
     }
 
     /*
@@ -139,19 +118,10 @@ export function CreateAgentForm() {
         address: tokenConfig.USDT,
         abi: erc20Abi,
         functionName: "approve",
-        args: [
-          executor,
-          pendingApprovalAmount.current,
-        ],
+        args: [executor, pendingApprovalAmount.current],
       });
     }
-  }, [
-    isSuccess,
-    receipt,
-    writeApprove,
-    tokenConfig,
-    executor,
-  ]);
+  }, [isSuccess, receipt, writeApprove, tokenConfig, executor]);
 
   function createAgent() {
     if (!address) {
@@ -166,10 +136,8 @@ export function CreateAgentForm() {
       return;
     }
 
-    const agentAddress =
-      process.env.NEXT_PUBLIC_AGENT_ADDRESS as
-        | `0x${string}`
-        | undefined;
+    const agentAddress = process.env.NEXT_PUBLIC_AGENT_ADDRESS as
+      `0x${string}` | undefined;
 
     if (!agentAddress) {
       alert("Agent address is not configured.");
@@ -184,48 +152,20 @@ export function CreateAgentForm() {
     /*
      * USDT uses 6 decimals on both supported chains.
      */
-    const amount = parseUnits(
-      maxAmount || "0",
-      6,
-    );
+    const amount = parseUnits(maxAmount || "0", 6);
 
-    const maxSlippageBps =
-      BigInt(
-        Math.round(
-          Number(slippage || "0") * 100,
-        ),
-      );
+    const maxSlippageBps = BigInt(Math.round(Number(slippage || "0") * 100));
 
-    const minOpportunityScore =
-      BigInt(
-        Math.round(
-          Number(minScore || "0"),
-        ),
-      );
+    const minOpportunityScore = BigInt(Math.round(Number(minScore || "0")));
 
     const cooldownSeconds =
-      BigInt(
-        Math.round(
-          Number(cooldown || "0"),
-        ),
-      ) *
-      60n *
-      60n;
+      BigInt(Math.round(Number(cooldown || "0"))) * 60n * 60n;
 
     const expirySeconds =
-      BigInt(
-        Math.round(
-          Number(expiry || "0"),
-        ),
-      ) *
-      24n *
-      60n *
-      60n;
+      BigInt(Math.round(Number(expiry || "0"))) * 24n * 60n * 60n;
 
     const expiryTimestamp =
-      BigInt(
-        Math.floor(Date.now() / 1000),
-      ) + expirySeconds;
+      BigInt(Math.floor(Date.now() / 1000)) + expirySeconds;
 
     /*
      * Remember exactly what was approved.
@@ -264,9 +204,7 @@ export function CreateAgentForm() {
   return (
     <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
       <div>
-        <p className="text-lg font-semibold">
-          Create AlphaLens Agent
-        </p>
+        <p className="text-lg font-semibold">Create AlphaLens Agent</p>
 
         <p className="mt-1 text-sm text-white/50">
           Define exactly what your agent is allowed to do.
@@ -275,8 +213,8 @@ export function CreateAgentForm() {
 
       {!supportedChain && (
         <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
-          Unsupported network. Connect to BOT Chain
-          Testnet or BOT Chain Mainnet.
+          Unsupported network. Connect to BOT Chain Testnet or BOT Chain
+          Mainnet.
         </div>
       )}
 
@@ -285,31 +223,21 @@ export function CreateAgentForm() {
           <div>
             Network:{" "}
             <span className="text-white">
-              {chainId === 677
-                ? "BOT Chain Mainnet"
-                : "BOT Chain Testnet"}
+              {chainId === 677 ? "BOT Chain Mainnet" : "BOT Chain Testnet"}
             </span>
           </div>
 
-          <div className="mt-1 break-all">
-            USDT: {tokenConfig.USDT}
-          </div>
+          <div className="mt-1 break-all">USDT: {tokenConfig.USDT}</div>
 
-          <div className="mt-1 break-all">
-            WBOT: {tokenConfig.WBOT}
-          </div>
+          <div className="mt-1 break-all">WBOT: {tokenConfig.WBOT}</div>
 
-          <div className="mt-1 break-all">
-            Executor: {executor}
-          </div>
+          <div className="mt-1 break-all">Executor: {executor}</div>
         </div>
       )}
 
       <div className="mt-6 space-y-5">
         <div>
-          <label className="text-sm text-white/60">
-            Capital
-          </label>
+          <label className="text-sm text-white/60">Capital</label>
 
           <div className="mt-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
             USDT
@@ -317,9 +245,7 @@ export function CreateAgentForm() {
         </div>
 
         <div>
-          <label className="text-sm text-white/60">
-            Allowed destination
-          </label>
+          <label className="text-sm text-white/60">Allowed destination</label>
 
           <div className="mt-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
             WBOT
@@ -327,15 +253,11 @@ export function CreateAgentForm() {
         </div>
 
         <div>
-          <label className="text-sm text-white/60">
-            Maximum trade
-          </label>
+          <label className="text-sm text-white/60">Maximum trade</label>
 
           <input
             value={maxAmount}
-            onChange={(e) =>
-              setMaxAmount(e.target.value)
-            }
+            onChange={(e) => setMaxAmount(e.target.value)}
             type="number"
             min="0"
             step="0.01"
@@ -348,15 +270,11 @@ export function CreateAgentForm() {
         </div>
 
         <div>
-          <label className="text-sm text-white/60">
-            Maximum slippage
-          </label>
+          <label className="text-sm text-white/60">Maximum slippage</label>
 
           <input
             value={slippage}
-            onChange={(e) =>
-              setSlippage(e.target.value)
-            }
+            onChange={(e) => setSlippage(e.target.value)}
             type="number"
             min="0"
             max="100"
@@ -364,9 +282,7 @@ export function CreateAgentForm() {
             className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 outline-none"
           />
 
-          <p className="mt-1 text-xs text-white/40">
-            Percentage
-          </p>
+          <p className="mt-1 text-xs text-white/40">Percentage</p>
         </div>
 
         <div>
@@ -376,9 +292,7 @@ export function CreateAgentForm() {
 
           <input
             value={minScore}
-            onChange={(e) =>
-              setMinScore(e.target.value)
-            }
+            onChange={(e) => setMinScore(e.target.value)}
             type="number"
             min="0"
             max="100"
@@ -391,35 +305,25 @@ export function CreateAgentForm() {
         </div>
 
         <div>
-          <label className="text-sm text-white/60">
-            Cooldown
-          </label>
+          <label className="text-sm text-white/60">Cooldown</label>
 
           <input
             value={cooldown}
-            onChange={(e) =>
-              setCooldown(e.target.value)
-            }
+            onChange={(e) => setCooldown(e.target.value)}
             type="number"
             min="0"
             className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 outline-none"
           />
 
-          <p className="mt-1 text-xs text-white/40">
-            Hours between executions
-          </p>
+          <p className="mt-1 text-xs text-white/40">Hours between executions</p>
         </div>
 
         <div>
-          <label className="text-sm text-white/60">
-            Policy expiry
-          </label>
+          <label className="text-sm text-white/60">Policy expiry</label>
 
           <input
             value={expiry}
-            onChange={(e) =>
-              setExpiry(e.target.value)
-            }
+            onChange={(e) => setExpiry(e.target.value)}
             type="number"
             min="1"
             className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 outline-none"
@@ -454,9 +358,7 @@ export function CreateAgentForm() {
         </button>
 
         {hash && (
-          <p className="break-all text-xs text-white/40">
-            Policy tx: {hash}
-          </p>
+          <p className="break-all text-xs text-white/40">Policy tx: {hash}</p>
         )}
 
         {approveHash && (
@@ -468,13 +370,12 @@ export function CreateAgentForm() {
         {isSuccess && !approveSuccess && (
           <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm">
             <p className="font-medium text-yellow-400">
-              Policy created — approve the spend limit
-              to finish.
+              Policy created — approve the spend limit to finish.
             </p>
 
             <p className="mt-1 text-white/50">
-              Confirm the second wallet prompt so the
-              agent can pull funds when it executes.
+              Confirm the second wallet prompt so the agent can pull funds when
+              it executes.
             </p>
           </div>
         )}
@@ -486,8 +387,7 @@ export function CreateAgentForm() {
             </p>
 
             <p className="mt-1 text-white/50">
-              Your AlphaLens agent can now execute
-              within these limits.
+              Your AlphaLens agent can now execute within these limits.
             </p>
           </div>
         )}

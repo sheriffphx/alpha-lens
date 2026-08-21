@@ -5,18 +5,11 @@ export const ALPHA_LENS_AGENT_EXECUTOR_ADDRESSES = {
   677: "0xB363a61f16Ca0a69772A9a445c707D5C98590F92",
 } as const;
 
-export function getAgentExecutor(
-  chainId: number,
-): Address {
-  const address =
-    ALPHA_LENS_AGENT_EXECUTOR_ADDRESSES[
-      chainId as 968 | 677
-    ];
+export function getAgentExecutor(chainId: number): Address {
+  const address = ALPHA_LENS_AGENT_EXECUTOR_ADDRESSES[chainId as 968 | 677];
 
   if (!address) {
-    throw new Error(
-      `Unsupported chain: ${chainId}`,
-    );
+    throw new Error(`Unsupported chain: ${chainId}`);
   }
 
   return address as Address;

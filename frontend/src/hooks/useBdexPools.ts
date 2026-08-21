@@ -135,16 +135,13 @@ export function useBdexPools(
     const resultIndex = i * 3;
 
     const token0 = pairDetails?.[resultIndex]?.result as
-      | `0x${string}`
-      | undefined;
+      `0x${string}` | undefined;
 
     const token1 = pairDetails?.[resultIndex + 1]?.result as
-      | `0x${string}`
-      | undefined;
+      `0x${string}` | undefined;
 
     const reserves = pairDetails?.[resultIndex + 2]?.result as
-      | readonly [bigint, bigint, number]
-      | undefined;
+      readonly [bigint, bigint, number] | undefined;
 
     if (!token0 || !token1 || !reserves) {
       continue;

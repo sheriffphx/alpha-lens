@@ -103,19 +103,14 @@ export function AgentHistory() {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `/api/agent/activity?chainId=${chainId}`,
-        {
-          cache: "no-store",
-        },
-      );
+      const res = await fetch(`/api/agent/activity?chainId=${chainId}`, {
+        cache: "no-store",
+      });
 
       const data: ActivityResponse = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(
-          data.error ?? "Failed to load agent history",
-        );
+        throw new Error(data.error ?? "Failed to load agent history");
       }
 
       setActivity(data.activity ?? []);
@@ -155,26 +150,14 @@ export function AgentHistory() {
       loadActivity();
     };
 
-    window.addEventListener(
-      "alphalens-policy-created",
-      refresh,
-    );
+    window.addEventListener("alphalens-policy-created", refresh);
 
-    window.addEventListener(
-      "alphalens-policy-updated",
-      refresh,
-    );
+    window.addEventListener("alphalens-policy-updated", refresh);
 
     return () => {
-      window.removeEventListener(
-        "alphalens-policy-created",
-        refresh,
-      );
+      window.removeEventListener("alphalens-policy-created", refresh);
 
-      window.removeEventListener(
-        "alphalens-policy-updated",
-        refresh,
-      );
+      window.removeEventListener("alphalens-policy-updated", refresh);
     };
   }, [loadActivity]);
 
@@ -183,9 +166,7 @@ export function AgentHistory() {
       {/* HEADER */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-lg font-semibold">
-            Agent History
-          </p>
+          <p className="text-lg font-semibold">Agent History</p>
 
           <p className="mt-1 text-sm text-white/40">
             Verifiable AI decisions and on-chain actions.
@@ -204,9 +185,7 @@ export function AgentHistory() {
       {/* LOADING */}
       {loading ? (
         <div className="mt-6">
-          <p className="text-sm text-white/40">
-            Loading agent history...
-          </p>
+          <p className="text-sm text-white/40">Loading agent history...</p>
         </div>
       ) : activity.length === 0 ? (
         <div className="mt-6 rounded-xl border border-dashed border-white/10 p-6 text-center">
@@ -229,9 +208,7 @@ export function AgentHistory() {
               {/* CONTENT */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-sm font-medium">
-                    {getTitle(item.type)}
-                  </p>
+                  <p className="text-sm font-medium">{getTitle(item.type)}</p>
 
                   {item.policyId && (
                     <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-white/35">
@@ -247,10 +224,7 @@ export function AgentHistory() {
                 {/* TRADE AMOUNT */}
                 {item.amountIn && (
                   <p className="mt-2 text-xs text-white/35">
-                    Swapped{" "}
-                    {(Number(item.amountIn) / 1_000_000).toFixed(
-                      2,
-                    )}{" "}
+                    Swapped {(Number(item.amountIn) / 1_000_000).toFixed(2)}{" "}
                     USDT
                     {item.amountOut
                       ? ` → ${(Number(item.amountOut) / 1_000_000).toFixed(2)} WBOT`

@@ -22,7 +22,8 @@ export default function Hero() {
             for DeFi
           </h1>
           <p className="text-[18px] text-white/55 mx-auto mt-0 mb-11 max-w-[540px] font-inter font-normal leading-[1.7] tracking-[-0.02em]">
-            Detect idle capital, monitor risk, discover yield opportunities, and let AI decide and execute — all on-chain
+            Detect idle capital, monitor risk, discover yield opportunities, and
+            let AI decide and execute — all on-chain
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <LaunchAppButton className="cursor-pointer border-none px-[32px] py-[14px] font-jetbrains font-mono font-extrabold text-[15px] leading-[22.5px] tracking-[-0.02em] text-black rounded-[8px] bg-[linear-gradient(135deg,rgb(0,212,255)_0%,rgb(167,139,250)_45%,rgb(200,160,80)_100%)] transition-all duration-200 hover:shadow-[0_0_40px_rgba(0,212,255,0.2)] whitespace-nowrap translate-y-0 hover:-translate-y-[1px]">

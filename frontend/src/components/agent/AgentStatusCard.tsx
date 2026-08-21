@@ -24,11 +24,7 @@ export function AgentStatusCard({ policyId }: Props) {
       setPaused(true);
     } catch (error) {
       console.error(error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Failed to pause agent"
-      );
+      alert(error instanceof Error ? error.message : "Failed to pause agent");
     }
   }
 
@@ -36,9 +32,7 @@ export function AgentStatusCard({ policyId }: Props) {
     <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-white/50">
-            AlphaLens Agent
-          </p>
+          <p className="text-sm text-white/50">AlphaLens Agent</p>
 
           <div className="mt-1 flex items-center gap-2">
             <span
@@ -60,39 +54,23 @@ export function AgentStatusCard({ policyId }: Props) {
 
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div className="rounded-xl bg-white/[0.04] p-3">
-          <p className="text-xs text-white/40">
-            Max trade
-          </p>
-          <p className="mt-1 font-semibold">
-            10 USDT
-          </p>
+          <p className="text-xs text-white/40">Max trade</p>
+          <p className="mt-1 font-semibold">10 USDT</p>
         </div>
 
         <div className="rounded-xl bg-white/[0.04] p-3">
-          <p className="text-xs text-white/40">
-            Max slippage
-          </p>
-          <p className="mt-1 font-semibold">
-            1%
-          </p>
+          <p className="text-xs text-white/40">Max slippage</p>
+          <p className="mt-1 font-semibold">1%</p>
         </div>
 
         <div className="rounded-xl bg-white/[0.04] p-3">
-          <p className="text-xs text-white/40">
-            Min opportunity
-          </p>
-          <p className="mt-1 font-semibold">
-            70
-          </p>
+          <p className="text-xs text-white/40">Min opportunity</p>
+          <p className="mt-1 font-semibold">70</p>
         </div>
 
         <div className="rounded-xl bg-white/[0.04] p-3">
-          <p className="text-xs text-white/40">
-            Cooldown
-          </p>
-          <p className="mt-1 font-semibold">
-            24h
-          </p>
+          <p className="text-xs text-white/40">Cooldown</p>
+          <p className="mt-1 font-semibold">24h</p>
         </div>
       </div>
 

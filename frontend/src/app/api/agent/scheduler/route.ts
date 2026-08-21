@@ -31,9 +31,7 @@ export async function GET(req: Request) {
     const cronSecret = process.env.CRON_SECRET;
 
     if (!cronSecret) {
-      console.error(
-        "[AlphaLens Scheduler] CRON_SECRET is not configured.",
-      );
+      console.error("[AlphaLens Scheduler] CRON_SECRET is not configured.");
 
       return NextResponse.json(
         {
@@ -72,8 +70,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const agentAddress =
-      process.env.NEXT_PUBLIC_AGENT_ADDRESS?.toLowerCase();
+    const agentAddress = process.env.NEXT_PUBLIC_AGENT_ADDRESS?.toLowerCase();
 
     if (!agentAddress) {
       return NextResponse.json(
@@ -89,9 +86,7 @@ export async function GET(req: Request) {
     // 3. Base URL
     // ============================================================
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL ??
-      "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
     const results: Array<Record<string, unknown>> = [];
 
@@ -104,21 +99,13 @@ export async function GET(req: Request) {
 
     for (const chain of CHAINS) {
       try {
-        console.log(
-          `[AlphaLens Scheduler] ================================`,
-        );
+        console.log(`[AlphaLens Scheduler] ================================`);
 
-        console.log(
-          `[AlphaLens Scheduler] Scanning ${chain.chainName}`,
-        );
+        console.log(`[AlphaLens Scheduler] Scanning ${chain.chainName}`);
 
-        console.log(
-          `[AlphaLens Scheduler] Executor: ${chain.executor}`,
-        );
+        console.log(`[AlphaLens Scheduler] Executor: ${chain.executor}`);
 
-        console.log(
-          `[AlphaLens Scheduler] Agent: ${agentAddress}`,
-        );
+        console.log(`[AlphaLens Scheduler] Agent: ${agentAddress}`);
 
         const publicClient = createPublicClient({
           transport: http(chain.rpcUrl),
@@ -138,11 +125,7 @@ export async function GET(req: Request) {
 
         const policyIds: bigint[] = [];
 
-        for (
-          let id = 1n;
-          id <= BigInt(MAX_POLICY_SCAN);
-          id++
-        ) {
+        for (let id = 1n; id <= BigInt(MAX_POLICY_SCAN); id++) {
           try {
             const policy = await publicClient.readContract({
               address: chain.executor as Address,
@@ -166,20 +149,15 @@ export async function GET(req: Request) {
               break;
             }
 
-            console.log(
-              `[AlphaLens Scheduler] Policy ${id}:`,
-              {
-                owner,
-                agent: policyAgent,
-                active: policy[10],
-                expiry: policy[9]?.toString(),
-              },
-            );
+            console.log(`[AlphaLens Scheduler] Policy ${id}:`, {
+              owner,
+              agent: policyAgent,
+              active: policy[10],
+              expiry: policy[9]?.toString(),
+            });
 
             // Only schedule policies assigned to our agent.
-            if (
-              policyAgent?.toLowerCase() === agentAddress
-            ) {
+            if (policyAgent?.toLowerCase() === agentAddress) {
               policyIds.push(id);
             }
           } catch (error) {
@@ -212,20 +190,17 @@ export async function GET(req: Request) {
               `[AlphaLens Scheduler] Running policy ${policyId.toString()} on ${chain.chainName}`,
             );
 
-            const response = await fetch(
-              `${baseUrl}/api/agent/run`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  chainId: chain.chainId,
-                  policyId: Number(policyId),
-                }),
-                cache: "no-store",
+            const response = await fetch(`${baseUrl}/api/agent/run`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
               },
-            );
+              body: JSON.stringify({
+                chainId: chain.chainId,
+                policyId: Number(policyId),
+              }),
+              cache: "no-store",
+            });
 
             const result = await response.json();
 
@@ -241,9 +216,7 @@ export async function GET(req: Request) {
                 chainName: chain.chainName,
                 policyId: Number(policyId),
                 status: "failed",
-                error:
-                  result.error ??
-                  "Agent run failed",
+                error: result.error ?? "Agent run failed",
               });
 
               continue;
@@ -259,10 +232,8 @@ export async function GET(req: Request) {
               chainName: chain.chainName,
               policyId: Number(policyId),
               status: result.status,
-              transactionHash:
-                result.transactionHash ?? null,
-              decision:
-                result.decision ?? null,
+              transactionHash: result.transactionHash ?? null,
+              decision: result.decision ?? null,
             });
           } catch (error) {
             console.error(
@@ -277,9 +248,7 @@ export async function GET(req: Request) {
               policyId: Number(policyId),
               status: "failed",
               error:
-                error instanceof Error
-                  ? error.message
-                  : "Unknown policy error",
+                error instanceof Error ? error.message : "Unknown policy error",
             });
           }
         }
@@ -296,10 +265,7 @@ export async function GET(req: Request) {
           chainId: chain.chainId,
           chainName: chain.chainName,
           status: "failed",
-          error:
-            error instanceof Error
-              ? error.message
-              : "Chain scan failed",
+          error: error instanceof Error ? error.message : "Chain scan failed",
         });
       }
     }
@@ -317,18 +283,12 @@ export async function GET(req: Request) {
       results,
     });
   } catch (error) {
-    console.error(
-      "[AlphaLens Scheduler] Fatal error:",
-      error,
-    );
+    console.error("[AlphaLens Scheduler] Fatal error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Scheduler failed",
+        error: error instanceof Error ? error.message : "Scheduler failed",
       },
       { status: 500 },
     );

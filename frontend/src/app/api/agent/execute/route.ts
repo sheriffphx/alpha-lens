@@ -42,14 +42,12 @@ const BOT_MAINNET = defineChain({
 const deployments = {
   968: {
     chain: BOT_TESTNET,
-    executor:
-      "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as Address,
+    executor: "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as Address,
   },
 
   677: {
     chain: BOT_MAINNET,
-    executor:
-      "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as Address,
+    executor: "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as Address,
   },
 } as const;
 
@@ -169,15 +167,12 @@ export async function POST(req: Request) {
 
     if (
       typeof decisionId !== "string" ||
-      !/^0x[a-fA-F0-9]{64}$/.test(
-        decisionId,
-      )
+      !/^0x[a-fA-F0-9]{64}$/.test(decisionId)
     ) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "Invalid decisionId. Expected bytes32.",
+          error: "Invalid decisionId. Expected bytes32.",
         },
         { status: 400 },
       );
@@ -188,17 +183,13 @@ export async function POST(req: Request) {
       "0x0000000000000000000000000000000000000000000000000000000000000000";
 
     if (
-      typeof finalEvidenceHash !==
-        "string" ||
-      !/^0x[a-fA-F0-9]{64}$/.test(
-        finalEvidenceHash,
-      )
+      typeof finalEvidenceHash !== "string" ||
+      !/^0x[a-fA-F0-9]{64}$/.test(finalEvidenceHash)
     ) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "Invalid evidenceHash. Expected bytes32.",
+          error: "Invalid evidenceHash. Expected bytes32.",
         },
         { status: 400 },
       );
@@ -207,129 +198,88 @@ export async function POST(req: Request) {
     if (
       typeof tokenIn !== "string" ||
       typeof tokenOut !== "string" ||
-      !/^0x[a-fA-F0-9]{40}$/.test(
-        tokenIn,
-      ) ||
-      !/^0x[a-fA-F0-9]{40}$/.test(
-        tokenOut,
-      )
+      !/^0x[a-fA-F0-9]{40}$/.test(tokenIn) ||
+      !/^0x[a-fA-F0-9]{40}$/.test(tokenOut)
     ) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "Invalid token address.",
+          error: "Invalid token address.",
         },
         { status: 400 },
       );
     }
 
-    const privateKey =
-      process.env.AGENT_PRIVATE_KEY;
+    const privateKey = process.env.AGENT_PRIVATE_KEY;
 
     if (!privateKey) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "AGENT_PRIVATE_KEY is not configured",
+          error: "AGENT_PRIVATE_KEY is not configured",
         },
         { status: 500 },
       );
     }
 
-    const account =
-      privateKeyToAccount(
-        privateKey.startsWith("0x")
-          ? (privateKey as Hex)
-          : (`0x${privateKey}` as Hex),
-      );
-
-    const publicClient =
-      createPublicClient({
-        chain: deployment.chain,
-        transport: http(),
-      });
-
-    const walletClient =
-      createWalletClient({
-        account,
-        chain: deployment.chain,
-        transport: http(),
-      });
-
-    console.log(
-      "Agent execution chain:",
-      deployment.chain.name,
+    const account = privateKeyToAccount(
+      privateKey.startsWith("0x")
+        ? (privateKey as Hex)
+        : (`0x${privateKey}` as Hex),
     );
 
-    console.log(
-      "Chain ID:",
-      chainId,
-    );
+    const publicClient = createPublicClient({
+      chain: deployment.chain,
+      transport: http(),
+    });
 
-    console.log(
-      "Agent executor:",
-      deployment.executor,
-    );
+    const walletClient = createWalletClient({
+      account,
+      chain: deployment.chain,
+      transport: http(),
+    });
 
-    console.log(
-      "Agent signer:",
-      account.address,
-    );
+    console.log("Agent execution chain:", deployment.chain.name);
 
-    console.log(
-      "Policy ID:",
-      policyId,
-    );
+    console.log("Chain ID:", chainId);
 
-    const txHash =
-      await walletClient.writeContract({
-        address: deployment.executor,
-        abi: agentExecutorAbi,
-        functionName:
-          "executeDecision",
-        args: [
-          BigInt(policyId),
-          {
-            decisionId:
-              decisionId as Hex,
+    console.log("Agent executor:", deployment.executor);
 
-            tokenIn:
-              tokenIn as Address,
+    console.log("Agent signer:", account.address);
 
-            tokenOut:
-              tokenOut as Address,
+    console.log("Policy ID:", policyId);
 
-            amountIn:
-              BigInt(amountIn),
-
-            amountOutMin:
-              BigInt(amountOutMin),
-
-            opportunityScore:
-              BigInt(opportunityScore),
-
-            deadline:
-              BigInt(deadline),
-
-            evidenceHash:
-              finalEvidenceHash as Hex,
-          },
-        ],
-      });
-
-    console.log(
-      "Execution transaction:",
-      txHash,
-    );
-
-    const receipt =
-      await publicClient.waitForTransactionReceipt(
+    const txHash = await walletClient.writeContract({
+      address: deployment.executor,
+      abi: agentExecutorAbi,
+      functionName: "executeDecision",
+      args: [
+        BigInt(policyId),
         {
-          hash: txHash,
+          decisionId: decisionId as Hex,
+
+          tokenIn: tokenIn as Address,
+
+          tokenOut: tokenOut as Address,
+
+          amountIn: BigInt(amountIn),
+
+          amountOutMin: BigInt(amountOutMin),
+
+          opportunityScore: BigInt(opportunityScore),
+
+          deadline: BigInt(deadline),
+
+          evidenceHash: finalEvidenceHash as Hex,
         },
-      );
+      ],
+    });
+
+    console.log("Execution transaction:", txHash);
+
+    const receipt = await publicClient.waitForTransactionReceipt({
+      hash: txHash,
+    });
 
     if (receipt.status !== "success") {
       return NextResponse.json(
@@ -338,10 +288,8 @@ export async function POST(req: Request) {
           transactionHash: txHash,
           policyId: String(policyId),
           chainId,
-          chainName:
-            deployment.chain.name,
-          error:
-            "Execution transaction reverted",
+          chainName: deployment.chain.name,
+          error: "Execution transaction reverted",
         },
         { status: 500 },
       );
@@ -358,18 +306,13 @@ export async function POST(req: Request) {
       status: receipt.status,
     });
   } catch (error) {
-    console.error(
-      "Agent execution failed:",
-      error,
-    );
+    console.error("Agent execution failed:", error);
 
     return NextResponse.json(
       {
         success: false,
         error:
-          error instanceof Error
-            ? error.message
-            : "Agent execution failed",
+          error instanceof Error ? error.message : "Agent execution failed",
       },
       { status: 500 },
     );

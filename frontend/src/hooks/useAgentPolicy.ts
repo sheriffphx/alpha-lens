@@ -1,8 +1,8 @@
 "use client";
 
-import { useReadContract } from "wagmi";
+import { useChainId, useReadContract } from "wagmi";
 import { agentExecutorAbi } from "@/lib/agentExecutorAbi";
-import { ALPHALENS_AGENT_EXECUTOR } from "@/lib/agentExecutor";
+import { getAgentExecutor } from "@/lib/agentExecutor";
 
 export type AgentPolicy = {
   owner: `0x${string}`;
@@ -24,21 +24,23 @@ export type AgentPolicy = {
 };
 
 export function useAgentPolicy(policyId: number | null) {
+  const chainId = useChainId();
   const enabled = policyId !== null && policyId > 0;
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useReadContract({
-    address: ALPHALENS_AGENT_EXECUTOR,
+  let agentExecutorAddress: `0x${string}` | undefined;
+  try {
+    agentExecutorAddress = getAgentExecutor(chainId);
+  } catch {
+    agentExecutorAddress = undefined;
+  }
+
+  const { data, isLoading, isError, error, refetch } = useReadContract({
+    address: agentExecutorAddress,
     abi: agentExecutorAbi,
     functionName: "policies",
     args: enabled ? [BigInt(policyId!)] : undefined,
     query: {
-      enabled,
+      enabled: enabled && !!agentExecutorAddress,
     },
   });
 

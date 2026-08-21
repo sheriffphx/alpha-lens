@@ -207,7 +207,7 @@ export default function Dashboard() {
             </p>
           )}
         </article>
-        
+
         <article className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -225,8 +225,8 @@ export default function Dashboard() {
           </div>
           <div className="mt-5 rounded-xl bg-[#00D4FF]/5 p-4">
             <p className="text-sm leading-6 text-white/60">
-              Set an agent policy and let AlphaLens execute swaps on your
-              behalf within your defined limits.
+              Set an agent policy and let AlphaLens execute swaps on your behalf
+              within your defined limits.
             </p>
           </div>
         </article>

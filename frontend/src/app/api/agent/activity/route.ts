@@ -1,10 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  createPublicClient,
-  defineChain,
-  http,
-  parseAbiItem,
-} from "viem";
+import { createPublicClient, defineChain, http, parseAbiItem } from "viem";
 
 const botTestnet = defineChain({
   id: 968,
@@ -39,15 +34,13 @@ const botMainnet = defineChain({
 const deployments = {
   968: {
     chain: botTestnet,
-    executor:
-      "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as `0x${string}`,
+    executor: "0xF5B91F7D5a3863C244Ba4Cb9b409da9f88654DF1" as `0x${string}`,
     explorer: "https://scan.bohr.life",
   },
 
   677: {
     chain: botMainnet,
-    executor:
-      "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as `0x${string}`,
+    executor: "0xB363a61f16Ca0a69772A9a445c707D5C98590F92" as `0x${string}`,
     explorer: "https://scan.botchain.ai",
   },
 } as const;
@@ -261,9 +254,7 @@ export async function GET(req: Request) {
       {
         success: false,
         error:
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch activity",
+          error instanceof Error ? error.message : "Failed to fetch activity",
       },
       { status: 500 },
     );

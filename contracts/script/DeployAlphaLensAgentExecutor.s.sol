@@ -21,7 +21,6 @@ contract DeployAlphaLensAgentExecutor is Script {
     }
 }
 
-
 contract DeployMainnetAlphaLensAgentExecutor is Script {
     // BOT Chain mainnet BDEX router
     address constant MAINNET_BDEX_ROUTER = 0x1414eD29FdFD322c3c0a830330ed982E2D629e76;
