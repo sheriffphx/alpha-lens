@@ -30,7 +30,7 @@ export default function Hero() {
               Launch App — Free &rarr;
             </LaunchAppButton>
             <a
-              href="https://docs.google.com/document/d/14mfA7f-7ANPxPnUx2SBdEyxwIU1Ya6uPKylwoGFtl2c/edit?usp=sharing"
+              href="https://drive.google.com/file/d/1e9j9PT1XJcocMqt0d5SvVgoSY4n-wTuQ/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-[28px] py-[14px] font-jetbrains font-semibold text-[15px] leading-[22.5px] text-white/55 rounded-[8px] bg-white/5 backdrop-blur-[12px] border border-white/[0.08] cursor-pointer transition-all duration-150 hover:text-white"

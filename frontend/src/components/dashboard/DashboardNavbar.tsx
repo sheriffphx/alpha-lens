@@ -18,7 +18,7 @@ export default function DashboardNavbar() {
 
   return (
     <nav className="bg-black/85 border-b border-white/10">
-      <div className="h-[70px] md:h-[90px] px-4 md:px-6 flex items-center gap-2 md:gap-4">
+      <div className="h-[60px] md:h-[72px] px-4 md:px-6 flex items-center gap-2 md:gap-4">
         {/* Left — Back + Logo + Badge */}
         <div className="flex items-center gap-1 shrink-0">
           <Link
@@ -41,7 +41,7 @@ export default function DashboardNavbar() {
         </div>
 
         {/* Center — Tabs, hidden here on small screens, shown on md+ */}
-        <div className="hidden md:flex flex-1 items-center justify-center gap-1">
+        <div className="hidden md:flex flex-1 min-w-0 items-center justify-center gap-1">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
             return (

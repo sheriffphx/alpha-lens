@@ -380,11 +380,15 @@ export default function AgentPage() {
                       </p>
 
                       <p className="mt-1 text-sm">
-                        {Number(policy.lastExecuted) === 0
-                          ? "Never"
-                          : new Date(
-                              Number(policy.lastExecuted) * 1000,
-                            ).toLocaleString()}
+                        {(() => {
+                          const ts = Number(policy.lastExecuted);
+
+                          return !policy.lastExecuted ||
+                            Number.isNaN(ts) ||
+                            ts === 0
+                            ? "Never"
+                            : new Date(ts * 1000).toLocaleString();
+                        })()}
                       </p>
                     </div>
                   </div>

@@ -182,7 +182,7 @@ export async function GET(req: Request) {
           maxSlippageBps: policy[5].toString(),
           minOpportunityScore: policy[6].toString(),
           cooldown: policy[7].toString(),
-          lastExecution: policy[8].toString(),
+          lastExecuted: policy[8].toString(),
           expiry: policy[9].toString(),
           active: policy[10],
         };
